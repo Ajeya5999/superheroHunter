@@ -7,6 +7,7 @@ const searchButton = document.getElementById("search-button");
 //iife function
 
 (function() {
+    searchBar.value = "";
     displayList();
 })();
 
@@ -20,7 +21,7 @@ searchButton.addEventListener('click', function(event) {
 
 // Functions
 
-async function getHerosList(searchBy = "") {
+async function getHerosList(searchBy) {
     let url;
     if(searchBy == "") url = "https://gateway.marvel.com:443/v1/public/characters?limit=100&ts=1&apikey=045f3b6f0feb72129d011e0c8c2da774&hash=e50120b2312ba2aeb9686d8ccfdcba4d";
     else url = `https://gateway.marvel.com:443/v1/public/characters?nameStartsWith=${searchBy}&limit=100&ts=1&apikey=045f3b6f0feb72129d011e0c8c2da774&hash=e50120b2312ba2aeb9686d8ccfdcba4d`;
@@ -30,9 +31,10 @@ async function getHerosList(searchBy = "") {
 }
 
 async function displayList() {
-    const herosList = await getHerosList(searchBar.value);
+    const herosList = await getHerosList(searchBar.value.trim());
     for(hero of herosList) {
         let heroItem = document.createElement("li");
+        heroItem.heroId = hero.id;
         heroItem.setAttribute('class', "hero-item");
         let heroImage = document.createElement("img");
         heroImage.setAttribute('src', hero.thumbnail.path + "." + hero.thumbnail.extension);
@@ -45,6 +47,7 @@ async function displayList() {
         let heroInfoButton = document.createElement("button");
         heroInfoButton.setAttribute('class', "hero-item-info-button");
         heroInfoButton.innerText = "Learn More"
+        heroInfoButton.addEventListener('click', showHeroInfo);
         let heroFavButton = document.createElement("button");
         heroFavButton.setAttribute('class', "hero-item-fav-button");
         heroFavButton.innerText = "Favroite";
@@ -60,4 +63,9 @@ function removeList() {
         child.remove();
         child = searchList.firstElementChild;
     }
+}
+
+function showHeroInfo() {
+    localStorage.setItem("heroId", this.parentNode.parentNode.heroId);
+    window.location.href = "./hero.html";
 }
