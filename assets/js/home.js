@@ -1,8 +1,10 @@
-// Getting HTML elements
+// Getting / Declaring HTML elements
 
-const searchBar = document.getElementById("search-bar");
-const searchList = document.getElementById("search-list");
-const searchButton = document.getElementById("search-button");
+let searchBar = document.getElementById("search-bar");
+let searchList = document.getElementById("search-list");
+let searchButton = document.getElementById("search-button");
+let pageHeader = document.getElementById("page-header");
+let content = document.getElementById("content");
 
 //iife function
 
@@ -19,6 +21,8 @@ searchButton.addEventListener('click', function(event) {
     displayList();
 });
 
+pageHeader.addEventListener('click', showHome);
+
 // Functions
 
 async function getHerosList(searchBy) {
@@ -29,6 +33,8 @@ async function getHerosList(searchBy) {
     let data = await res.json();
     return data.data.results;
 }
+
+// Home Page
 
 async function displayList() {
     const herosList = await getHerosList(searchBar.value.trim());
@@ -65,7 +71,81 @@ function removeList() {
     }
 }
 
-function showHeroInfo() {
-    localStorage.setItem("heroId", this.parentNode.parentNode.heroId);
-    window.location.href = "./hero.html";
+function showHome() {
+    removeContent();
+    let form = document.createElement("form");
+    form.setAttribute("id", "search");
+    searchBar.value = "";
+    form.append(searchBar, searchButton);
+    let searchListContainer = document.createElement("div");
+    searchListContainer.setAttribute("id", "search-list-container");
+    searchList = document.createElement("ul");
+    searchList.setAttribute("id", "search-list");
+    searchListContainer.append(searchList);
+    content.append(form, searchListContainer);
+    displayList();
+}
+
+function removeContent() {
+    child = content.firstElementChild;
+    while(child) {
+        child.remove();
+        child = content.firstElementChild;
+    }
+}
+
+// SuperHero Page
+
+async function showHeroInfo() {
+    let heroId = this.parentNode.parentNode.heroId;
+    removeContent();
+    let res = await fetch(`https://gateway.marvel.com:443/v1/public/characters/${heroId}?limit=100&ts=1&apikey=045f3b6f0feb72129d011e0c8c2da774&hash=e50120b2312ba2aeb9686d8ccfdcba4d`);
+    let heroData = await res.json();
+    let hero = heroData.data.results;
+    hero = hero[0];
+    console.log(hero);
+    let heroContainer = document.createElement("div");
+    heroContainer.setAttribute("id", "hero-container");
+    let heroNameContainer = document.createElement('h1');
+    heroNameContainer.setAttribute('id', 'hero-name-container');
+    heroNameContainer.innerText = hero.name;
+    let heroImgContainer = document.createElement("div");
+    heroImgContainer.setAttribute("id", "hero-img-container");
+    let heroImg = document.createElement("img");
+    heroImg.setAttribute('src', hero.thumbnail.path + "." + hero.thumbnail.extension);
+    heroImg.setAttribute('alt', 'hero image');
+    heroImg.setAttribute('id', 'hero-img');
+    heroImgContainer.append(heroImg);
+    let heroDcrptContainer = document.createElement("div");
+    heroDcrptContainer.setAttribute('id', 'hero-dcrpt-container');
+    let heroIntroContainer = document.createElement("div");
+    heroIntroContainer.setAttribute("id", 'hero-intro-container');
+    if(hero.description === "") heroIntroContainer.innerText = "No Description Found";
+    else heroIntroContainer.innerText = hero.description;
+    let heroEventsContainer = document.createElement("div");
+    heroEventsContainer.setAttribute("id", "hero-events-container");
+    let heroComics = document.createElement("div");
+    let heroComicsHeader = document.createElement("h4");
+    heroComicsHeader.innerText = "Comics";
+    let heroComicsList = document.createElement("ul");
+    fillHeroEvents(hero.comics.items, heroComicsList);
+    heroComics.append(heroComicsHeader, heroComicsList);
+    let heroSeries = document.createElement("div");
+    let heroSeriesHeader = document.createElement("h4");
+    heroSeriesHeader.innerText = "Series";
+    let heroSeriesList = document.createElement("ul");
+    fillHeroEvents(hero.series.items, heroSeriesList);
+    heroSeries.append(heroSeriesHeader, heroSeriesList);
+    heroEventsContainer.append(heroComics, heroSeries);
+    heroDcrptContainer.append(heroIntroContainer, heroEventsContainer);
+    heroContainer.append(heroNameContainer, heroImgContainer, heroDcrptContainer);
+    content.append(heroContainer);
+}
+
+function fillHeroEvents(heroEvents, heroEventContainer) {
+    for(let iterator = 0; iterator < 5 && iterator < heroEvents.length; iterator++) {
+        let event = document.createElement("li");
+        event.innerText = heroEvents[iterator].name;
+        heroEventContainer.append(event);
+    }
 }

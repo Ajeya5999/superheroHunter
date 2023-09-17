@@ -23,9 +23,11 @@ header {
 
 h1 {
     text-align: center;
-    border: solid var(--primary-theme-color) 5px;
     padding: 15px;
-    background-color: var(--tertiary-theme-color);
+}
+
+h4 {
+    text-align: center;
 }
 
 button {
@@ -41,7 +43,20 @@ button:hover {
     background-color: black;
 }
 
-/* Search Bar */
+div {
+    display: inline-block;
+}
+
+/* Home Page */
+
+    /* Page Header */
+
+#page-header {
+    border: solid var(--primary-theme-color) 5px;
+    background-color: var(--tertiary-theme-color);
+}
+
+    /* Search Bar */
 
 #search {
     width: 100%;
@@ -61,7 +76,7 @@ button:hover {
     width: 10%;
 }
 
-/* Hero List */
+    /* Hero List */
 
 #search-list {
     list-style: none;
@@ -103,4 +118,46 @@ button:hover {
 
 .hero-item-button-container > button {
     font-size: 1.2rem;
+}
+
+/* Superhero Page */
+
+#hero-container {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: var(--tertiary-theme-color);
+    border: solid var(--primary-theme-color) 6px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#hero-name-container {
+    width: 100%;
+    margin: 0;
+}
+
+#hero-img-container {
+    max-width: 33%;
+    width: fit-content;
+    height: fit-content;
+    border: solid var(--primary-theme-color) 3px;
+}
+
+#hero-img-container img {
+    max-width: 100%;
+}
+
+#hero-dcrpt-container {
+    width: 66%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#hero-events-container {
+    width: 100%;
+    display: flex;
+}
+
+#hero-events-container > div {
+    width: 50%;
 }
