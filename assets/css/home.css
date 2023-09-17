@@ -51,9 +51,30 @@ div {
 
     /* Page Header */
 
+header {
+    position: relative;
+}
+
+#view-favroites {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    height: 50px;
+    width: 120px;
+    font-weight: bold;
+}
+
 #page-header {
     border: solid var(--primary-theme-color) 5px;
     background-color: var(--tertiary-theme-color);
+    transition-property: border-color, color;
+    transition-duration: 200ms;
+}
+
+#page-header:hover {
+    --hover-color: rgb(177, 177, 177);
+    border-color: var(--hover-color);
+    color: var(--hover-color);
 }
 
     /* Search Bar */
@@ -124,11 +145,22 @@ div {
 
 #hero-container {
     display: flex;
+    position: relative;
     flex-wrap: wrap;
     background-color: var(--tertiary-theme-color);
     border: solid var(--primary-theme-color) 6px;
     padding: 10px;
     box-sizing: border-box;
+}
+
+#hero-container > button {
+    height: 40px;
+    width: 80px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 1rem;
+    font-weight: bold;
 }
 
 #hero-name-container {
@@ -160,4 +192,20 @@ div {
 
 #hero-events-container > div {
     width: 50%;
+}
+
+/* Favroites Page */
+
+#message {
+    border: solid var(--primary-theme-color) 5px;
+    background-color: var(--tertiary-theme-color);
+}
+
+#fav-list {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
 }
